@@ -29,10 +29,10 @@ public class Repository<TEntity> : IDisposable, IRepository<TEntity> where TEnti
 
     public virtual async Task DeleteAsync(long id)
     {
-        TEntity entity = await this.GetByIdAsync(id);
+        TEntity? entity = await this.GetByIdAsync(id);
 
         if (entity == null)
-            throw new ArgumentNullException("entity");
+            throw new ArgumentNullException(nameof(entity));
 
         DbSet.Remove(entity);
 
@@ -50,7 +50,7 @@ public class Repository<TEntity> : IDisposable, IRepository<TEntity> where TEnti
         await Context.SaveChangesAsync();
     }
 
-    public virtual async Task<TEntity> GetByIdAsync(long id)
+    public virtual async Task<TEntity?> GetByIdAsync(long id)
         => await DbSet.FirstOrDefaultAsync(p => p.Id == id);
 
     public virtual async Task<IEnumerable<TEntity>> GetAllAsync()

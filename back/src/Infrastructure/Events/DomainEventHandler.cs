@@ -23,5 +23,15 @@ public class DomainEventHandler : IDomainEventHandler
         => await _mediator.Publish(GetNotificationCorrespondingToDomainEvent(domainEvent));
 
     private INotification GetNotificationCorrespondingToDomainEvent(DomainEvent domainEvent)
-        => (INotification)Activator.CreateInstance(typeof(DomainEventNotification<>).MakeGenericType(domainEvent.GetType()), domainEvent);
+    {
+        var notificationType = typeof(DomainEventNotification<>).MakeGenericType(domainEvent.GetType());
+        var notificationInstance = Activator.CreateInstance(notificationType, domainEvent);
+
+        if (notificationInstance is not INotification notification)
+        {
+            throw new InvalidOperationException($"Could not create notification for domain event type {domainEvent.GetType().FullName}.");
+        }
+
+        return notification;
+    }
 }

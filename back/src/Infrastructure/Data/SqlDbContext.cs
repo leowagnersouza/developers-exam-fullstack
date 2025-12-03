@@ -12,8 +12,6 @@ public class SqlDbContext : DbContext
     public SqlDbContext(DbContextOptions<SqlDbContext> options, IDomainEventHandler domainEventService) : base(options)
         => _domainEventService = domainEventService;
 
-    public SqlDbContext(DbContextOptions<SqlDbContext> option) : base(option) { }
-
     public override async Task<int> SaveChangesAsync(CancellationToken cancellationToken = default)
     {
         var result = await base.SaveChangesAsync(cancellationToken);
@@ -59,7 +57,7 @@ public class SqlDbContext : DbContext
 
                 await _domainEventService.Publish(domainEventEntity);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 throw;
             }
