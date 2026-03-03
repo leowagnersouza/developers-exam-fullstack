@@ -1,4 +1,5 @@
 using Domain.Events;
+using System.ComponentModel.DataAnnotations.Schema;
 using Domain.Interfaces;
 using FluentValidation;
 using FluentValidation.Results;
@@ -13,7 +14,10 @@ public abstract class Entity<TEntity> : AbstractValidator<TEntity>, IHasDomainEv
 
     public abstract bool IsValid();
 
+    [NotMapped]
     public ValidationResult ValidationResult { get; protected set; }
+
+    [NotMapped]
     public List<DomainEvent> DomainEvents { get; set; }
 
     protected Entity()
@@ -22,11 +26,8 @@ public abstract class Entity<TEntity> : AbstractValidator<TEntity>, IHasDomainEv
         DomainEvents = [];
     }
 
-    public void SetLastAction()
-    {
-        if (Id > 0)
-            LastUpdatedDate = DateTime.Now;
-        else
-            CreatedDate = DateTime.Now;
-    }
+    // A definição de CreatedDate e LastUpdatedDate foi centralizada no DbContext
+    // (SqlDbContext.SaveChangesAsync). Este método foi removido para evitar
+    // chamadas dispersas e garantir que a atribuição de timestamps seja feita
+    // de forma consistente e atômica durante a persistência.
 }

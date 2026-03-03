@@ -19,9 +19,6 @@ public class Repository<TEntity> : IDisposable, IRepository<TEntity> where TEnti
     {
         if (entity == null)
             throw new ArgumentNullException("entity");
-
-        entity.SetLastAction();
-
         DbSet.Add(entity);
 
         await Context.SaveChangesAsync();
@@ -44,7 +41,6 @@ public class Repository<TEntity> : IDisposable, IRepository<TEntity> where TEnti
         if (entity == null)
             throw new ArgumentNullException("entity");
 
-        entity.SetLastAction();
         DbSet.Update(entity);
 
         await Context.SaveChangesAsync();
